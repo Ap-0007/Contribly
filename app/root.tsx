@@ -108,7 +108,7 @@ function AppContent() {
       <header className="app-header">
         <div className="nav-container">
           <Link to="/" className="logo-link">
-            CONTRIBLY <span className="logo-dot"></span>
+            CONTRIBLY
           </Link>
           <nav className="nav-links">
             <NavLink 

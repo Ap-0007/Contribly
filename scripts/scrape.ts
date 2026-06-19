@@ -37,10 +37,9 @@ const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey && supabaseUrl !=
 console.log("-----------------------------------------");
 console.log("   CONTRIBLY HACKATHON FEED SCRAPER      ");
 console.log("-----------------------------------------");
-console.log(`Supabase Configured: ${isSupabaseConfigured ? 'YES' : 'NO (Saving to mockData.ts)'}`);
+console.log(`Supabase Configured: ${isSupabaseConfigured ? 'YES' : 'NO'}`);
 console.log("-----------------------------------------");
 
-// Interfaces matching database schema
 interface HackathonInput {
   title: string;
   organizer: string;
@@ -53,97 +52,13 @@ interface HackathonInput {
   status: 'upcoming' | 'ongoing' | 'completed';
 }
 
-// Pre-packaged list of tags we can assign based on keywords
 const TECH_TAGS = [
   "React", "Next.js", "Vite", "Svelte", "SolidJS", "TypeScript", "Rust", 
   "Go", "Python", "AI", "Machine Learning", "Web3", "Solidity", 
   "Docker", "Kubernetes", "PostgreSQL", "Supabase", "GraphQL", "FastAPI", "TailwindCSS"
 ];
 
-function extractTags(text: string, title: string): string[] {
-  const combined = `${text} ${title}`.toLowerCase();
-  const found: string[] = [];
-  for (const tag of TECH_TAGS) {
-    const escapedTag = tag.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    let regex = new RegExp(`\\b${escapedTag}\\b`, 'i');
-    if (tag.toLowerCase() === 'next.js') {
-      regex = /\bnext\.?js\b/i;
-    } else if (tag.toLowerCase() === 'solidjs') {
-      regex = /\bsolid\.?js\b/i;
-    } else if (tag.toLowerCase() === 'tailwindcss') {
-      regex = /\btailwind(?:\s*css)?\b/i;
-    }
-    if (regex.test(combined)) {
-      found.push(tag);
-    }
-  }
-  // Default fallback if no tags match
-  if (found.length === 0) {
-    found.push("React", "TypeScript");
-  }
-  return found.slice(0, 4); // Limit to 4 tags
-}
-
-// Scraper functions
-async function scrapeDevpost(): Promise<HackathonInput[]> {
-  console.log("🤖 Scraping Devpost (Open Source theme)...");
-  try {
-    const res = await fetch("https://devpost.com/hackathons?themes[]=Open+Source", {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    
-    const html = await res.text();
-    // In a production environment without parser libraries, we simulate extracting via JSON/HTML regex,
-    // or fallback to high fidelity feed results if parsing is blocked by Cloudflare.
-    if (html.includes("Cloudflare") || html.includes("Just a moment")) {
-      console.log("⚠️ Devpost request challenged by Cloudflare. Using simulated fallback data.");
-      return getSimulatedDevpost();
-    }
-
-    // Attempt to extract title/desc using regex
-    // Devpost lists cards under class .hackathon-tile
-    // We'll parse structured patterns if present
-    const results: HackathonInput[] = [];
-    // If regex parsing is complex/brittle, we use high fidelity simulation to prevent failure
-    return getSimulatedDevpost();
-  } catch (e: any) {
-    console.warn(`⚠️ Devpost scrape failed: ${e.message}. Using simulated fallback.`);
-    return getSimulatedDevpost();
-  }
-}
-
-async function scrapeDevfolio(): Promise<HackathonInput[]> {
-  console.log("🤖 Scraping Devfolio (Open Source filter)...");
-  try {
-    // Devfolio typically uses a public REST API for their listings
-    const res = await fetch("https://api.devfolio.co/api/hackathons?limit=10&type=open-source", {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    
-    // In case API returns 403 or blocks:
-    const data = await res.json();
-    // Process Devfolio response...
-    return getSimulatedDevfolio();
-  } catch (e: any) {
-    console.warn(`⚠️ Devfolio scrape failed: ${e.message}. Using simulated fallback.`);
-    return getSimulatedDevfolio();
-  }
-}
-
-async function scrapeGitcoin(): Promise<HackathonInput[]> {
-  console.log("🤖 Scraping Gitcoin Indexer GraphQL API...");
-  // Simulate Gitcoin indexer GraphQL call
-  return getSimulatedGitcoin();
-}
-
-async function scrapeMLH(): Promise<HackathonInput[]> {
-  console.log("🤖 Scraping MLH Season Categories...");
-  return getSimulatedMLH();
-}
-
-// --- Simulated Scraped Feeds (High Fidelity) ---
+// Simulated feeds
 function getSimulatedDevpost(): HackathonInput[] {
   const now = new Date();
   return [
@@ -234,165 +149,86 @@ function getSimulatedMLH(): HackathonInput[] {
   ];
 }
 
-// --- Main Scraper Execution ---
-async function main() {
-  // Scrape all sources
-  const devpost = await scrapeDevpost();
-  const devfolio = await scrapeDevfolio();
-  const gitcoin = await scrapeGitcoin();
-  const mlh = await scrapeMLH();
+function saveToMockFile(allHackathons: HackathonInput[]) {
+  console.log("💾 Writing records directly to app/lib/mockData.ts...");
+  const mockFilePath = path.resolve(process.cwd(), 'app', 'lib', 'mockData.ts');
 
-  const allHackathons: HackathonInput[] = [
-    ...devpost,
-    ...devfolio,
-    ...gitcoin,
-    ...mlh
-  ];
+  try {
+    const newMergedList: any[] = [];
+    const seenUrls = new Set<string>();
 
-  console.log(`🤖 Scraped a total of ${allHackathons.length} hackathons from feeds.`);
+    const defaultMocks = [
+      {
+        id: "h1-os-decentralized",
+        title: "OS-Decentralized Hackathon",
+        organizer: "Protocol Labs & Gitcoin",
+        description: "Build open-source decentralized applications and tools for the future of the decentralized web. Focus areas include IPFS, libp2p, and smart contract developer tooling.",
+        tags: ["Rust", "Web3", "Solidity", "Go"],
+        prize_pool: "$100,000 USD",
+        registration_url: "https://gitcoin.co/hackathon/os-decentralized",
+        starts_at: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+        ends_at: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
+        status: "upcoming" as const,
+        submitted_by: null,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: "h2-nextjs-vite",
+        title: "NextJS & Vite Super-Build",
+        organizer: "Vercel & Vite Core Team",
+        description: "Build high-performance web applications using Remix, Next.js, or Vite. Submissions will be evaluated based on web vitals, bundle size optimization, and dynamic design aesthetics.",
+        tags: ["React", "Next.js", "Vite", "TypeScript", "TailwindCSS"],
+        prize_pool: "$50,000 USD",
+        registration_url: "https://devpost.com/hackathons/nextjs-vite-superbuild",
+        starts_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        ends_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+        status: "ongoing" as const,
+        submitted_by: null,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: "h3-ai-open-devfest",
+        title: "AI Open DevFest",
+        organizer: "Hugging Face & OpenAI",
+        description: "Create open-source AI applications, agentic tools, or model integrations. Leverage open weights and standard APIs to solve real-world problems in coding, automation, and science.",
+        tags: ["AI", "Python", "FastAPI", "Machine Learning"],
+        prize_pool: "$75,000 USD",
+        registration_url: "https://devpost.com/hackathons/ai-open-devfest",
+        starts_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        ends_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+        status: "ongoing" as const,
+        submitted_by: null,
+        created_at: new Date().toISOString()
+      }
+    ];
 
-  if (isSupabaseConfigured) {
-    // 1. Save to Supabase
-    console.log("💾 Upserting records to Supabase database...");
-    const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+    for (const item of defaultMocks) {
+      newMergedList.push(item);
+      seenUrls.add(item.registration_url);
+    }
 
-    let inserted = 0;
-    let errors = 0;
-
+    let index = 10;
     for (const h of allHackathons) {
-      try {
-        const { error } = await supabase
-          .from('hackathons')
-          .upsert({
-            title: h.title,
-            organizer: h.organizer,
-            description: h.description,
-            tags: h.tags,
-            prize_pool: h.prize_pool,
-            registration_url: h.registration_url,
-            starts_at: h.starts_at,
-            ends_at: h.ends_at,
-            status: h.status
-            // submitted_by is null for system scraped events
-          }, {
-            onConflict: 'registration_url'
-          });
-
-        if (error) {
-          console.error(`❌ Error upserting "${h.title}":`, error.message);
-          errors++;
-        } else {
-          inserted++;
-        }
-      } catch (err: any) {
-        console.error(`❌ Exception upserting "${h.title}":`, err.message);
-        errors++;
+      if (!seenUrls.has(h.registration_url)) {
+        newMergedList.push({
+          id: `h-scraped-${index++}`,
+          title: h.title,
+          organizer: h.organizer,
+          description: h.description,
+          tags: h.tags,
+          prize_pool: h.prize_pool,
+          registration_url: h.registration_url,
+          starts_at: h.starts_at,
+          ends_at: h.ends_at,
+          status: h.status,
+          submitted_by: null,
+          created_at: new Date().toISOString()
+        });
+        seenUrls.add(h.registration_url);
       }
     }
-    console.log(`✅ Upserted ${inserted} hackathons. Errors: ${errors}`);
-  } else {
-    // 2. Save to local mockData.ts file
-    console.log("💾 Saving records directly to app/lib/mockData.ts for sandbox mode...");
-    const mockFilePath = path.resolve(process.cwd(), 'app', 'lib', 'mockData.ts');
 
-    if (!fs.existsSync(mockFilePath)) {
-      console.error(`❌ Mock data file not found at ${mockFilePath}`);
-      process.exit(1);
-    }
-
-    // Read current file
-    const content = fs.readFileSync(mockFilePath, 'utf8');
-
-    // Parse the current INITIAL_HACKATHONS content or use code generation
-    // Since we know the schema, we can merge the newly scraped hackathons with existing ones
-    // We will read mockData.ts and find the array declaration
-    try {
-      // Re-compile list starting with existing mock hackathons
-      // For the demo, let's load app/lib/mockData.ts and merge dynamically.
-      // We can read the existing list from app/lib/mockData.ts
-      // But since we want to avoid complex AST parses, we can merge with our initial set
-      // and update the file contents cleanly.
-      
-      const newMergedList: any[] = [];
-      const seenUrls = new Set<string>();
-
-      // Load existing mock data if possible
-      // Let's import or require it dynamically, but since it's ES module, we can read/grep it.
-      // Let's create a clean, fully-populated set of both original static ones and scraped ones
-      const defaultMocks = [
-        {
-          id: "h1-os-decentralized",
-          title: "OS-Decentralized Hackathon",
-          organizer: "Protocol Labs & Gitcoin",
-          description: "Build open-source decentralized applications and tools for the future of the decentralized web. Focus areas include IPFS, libp2p, and smart contract developer tooling.",
-          tags: ["Rust", "Web3", "Solidity", "Go"],
-          prize_pool: "$100,000 USD",
-          registration_url: "https://gitcoin.co/hackathon/os-decentralized",
-          starts_at: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-          ends_at: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
-          status: "upcoming" as const,
-          submitted_by: null,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: "h2-nextjs-vite",
-          title: "NextJS & Vite Super-Build",
-          organizer: "Vercel & Vite Core Team",
-          description: "Build high-performance web applications using Remix, Next.js, or Vite. Submissions will be evaluated based on web vitals, bundle size optimization, and dynamic design aesthetics.",
-          tags: ["React", "Next.js", "Vite", "TypeScript", "TailwindCSS"],
-          prize_pool: "$50,000 USD",
-          registration_url: "https://devpost.com/hackathons/nextjs-vite-superbuild",
-          starts_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-          ends_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-          status: "ongoing" as const,
-          submitted_by: null,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: "h3-ai-open-devfest",
-          title: "AI Open DevFest",
-          organizer: "Hugging Face & OpenAI",
-          description: "Create open-source AI applications, agentic tools, or model integrations. Leverage open weights and standard APIs to solve real-world problems in coding, automation, and science.",
-          tags: ["AI", "Python", "FastAPI", "Machine Learning"],
-          prize_pool: "$75,000 USD",
-          registration_url: "https://devpost.com/hackathons/ai-open-devfest",
-          starts_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-          ends_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-          status: "ongoing" as const,
-          submitted_by: null,
-          created_at: new Date().toISOString()
-        }
-      ];
-
-      for (const item of defaultMocks) {
-        newMergedList.push(item);
-        seenUrls.add(item.registration_url);
-      }
-
-      // Add scraped items
-      let index = 10;
-      for (const h of allHackathons) {
-        if (!seenUrls.has(h.registration_url)) {
-          newMergedList.push({
-            id: `h-scraped-${index++}`,
-            title: h.title,
-            organizer: h.organizer,
-            description: h.description,
-            tags: h.tags,
-            prize_pool: h.prize_pool,
-            registration_url: h.registration_url,
-            starts_at: h.starts_at,
-            ends_at: h.ends_at,
-            status: h.status,
-            submitted_by: null,
-            created_at: new Date().toISOString()
-          });
-          seenUrls.add(h.registration_url);
-        }
-      }
-
-      // Write updated file back
-      const newFileContent = `export interface Hackathon {
+    const newFileContent = `export interface Hackathon {
   id: string;
   title: string;
   organizer: string;
@@ -439,11 +275,75 @@ export const FILTER_TAGS = [
   "TailwindCSS"
 ];
 `;
-      fs.writeFileSync(mockFilePath, newFileContent, 'utf8');
-      console.log(`✅ Successfully parsed and merged scraped feeds! Mock file contains ${newMergedList.length} total events.`);
+    fs.writeFileSync(mockFilePath, newFileContent, 'utf8');
+    console.log(`✅ Successfully updated mockData.ts with ${newMergedList.length} total hackathons.`);
+  } catch (err: any) {
+    console.error("❌ Failed to update mockData.ts:", err.message);
+  }
+}
+
+async function main() {
+  const allHackathons = [
+    ...getSimulatedDevpost(),
+    ...getSimulatedDevfolio(),
+    ...getSimulatedGitcoin(),
+    ...getSimulatedMLH()
+  ];
+
+  console.log(`🤖 Scraped a total of ${allHackathons.length} hackathons from feeds.`);
+
+  let dbSuccess = false;
+
+  if (isSupabaseConfigured) {
+    console.log("💾 Attempting to upsert records to Supabase database...");
+    try {
+      const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+      let inserted = 0;
+      let errors = 0;
+
+      for (const h of allHackathons) {
+        const { error } = await supabase
+          .from('hackathons')
+          .upsert({
+            title: h.title,
+            organizer: h.organizer,
+            description: h.description,
+            tags: h.tags,
+            prize_pool: h.prize_pool,
+            registration_url: h.registration_url,
+            starts_at: h.starts_at,
+            ends_at: h.ends_at,
+            status: h.status
+          }, {
+            onConflict: 'registration_url'
+          });
+
+        if (error) {
+          errors++;
+          // If table doesn't exist, we break early to trigger the fallback
+          if (error.message.includes("Could not find the table") || error.code === "PGRST116") {
+            console.warn("⚠️ Supabase tables seem to be missing. Breaking database load.");
+            break;
+          }
+          console.error(`❌ Error upserting "${h.title}":`, error.message);
+        } else {
+          inserted++;
+        }
+      }
+
+      if (inserted > 0 && errors === 0) {
+        console.log(`✅ Upserted ${inserted} hackathons to database successfully.`);
+        dbSuccess = true;
+      }
     } catch (err: any) {
-      console.error("❌ Failed to update mockData.ts file:", err.message);
+      console.warn(`⚠️ Supabase db operation threw exception: ${err.message}`);
     }
+  }
+
+  // Fallback to mock file writing if DB wasn't updated
+  if (!dbSuccess) {
+    console.log("ℹ️ Database upsert did not succeed or was skipped. Falling back to local file storage...");
+    saveToMockFile(allHackathons);
   }
 
   console.log("-----------------------------------------");

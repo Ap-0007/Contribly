@@ -94,13 +94,7 @@ body {
   letter-spacing: -0.05em;
 }
 
-.logo-dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--accent-color);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent-color);
-}
+
 
 .nav-links {
   display: flex;

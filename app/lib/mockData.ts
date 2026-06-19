@@ -22,88 +22,174 @@ export interface UserBookmark {
 
 export const INITIAL_HACKATHONS: Hackathon[] = [
   {
-    id: "h1-os-decentralized",
-    title: "OS-Decentralized Hackathon",
-    organizer: "Protocol Labs & Gitcoin",
-    description: "Build open-source decentralized applications and tools for the future of the decentralized web. Focus areas include IPFS, libp2p, and smart contract developer tooling.",
-    tags: ["Rust", "Web3", "Solidity", "Go"],
-    prize_pool: "$100,000 USD",
-    registration_url: "https://gitcoin.co/hackathon/os-decentralized",
-    starts_at: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(), // 10 days from now
-    ends_at: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),   // 20 days from now
-    status: "upcoming",
-    submitted_by: null,
-    created_at: new Date().toISOString()
+    "id": "h1-os-decentralized",
+    "title": "OS-Decentralized Hackathon",
+    "organizer": "Protocol Labs & Gitcoin",
+    "description": "Build open-source decentralized applications and tools for the future of the decentralized web. Focus areas include IPFS, libp2p, and smart contract developer tooling.",
+    "tags": [
+      "Rust",
+      "Web3",
+      "Solidity",
+      "Go"
+    ],
+    "prize_pool": "$100,000 USD",
+    "registration_url": "https://gitcoin.co/hackathon/os-decentralized",
+    "starts_at": "2026-06-29T19:18:36.610Z",
+    "ends_at": "2026-07-09T19:18:36.610Z",
+    "status": "upcoming",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
   },
   {
-    id: "h2-nextjs-vite",
-    title: "NextJS & Vite Super-Build",
-    organizer: "Vercel & Vite Core Team",
-    description: "Build high-performance web applications using Remix, Next.js, or Vite. Submissions will be evaluated based on web vitals, bundle size optimization, and dynamic design aesthetics.",
-    tags: ["React", "Next.js", "Vite", "TypeScript", "TailwindCSS"],
-    prize_pool: "$50,000 USD",
-    registration_url: "https://devpost.com/hackathons/nextjs-vite-superbuild",
-    starts_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),  // started 2 days ago
-    ends_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),    // ends in 5 days
-    status: "ongoing",
-    submitted_by: null,
-    created_at: new Date().toISOString()
+    "id": "h2-nextjs-vite",
+    "title": "NextJS & Vite Super-Build",
+    "organizer": "Vercel & Vite Core Team",
+    "description": "Build high-performance web applications using Remix, Next.js, or Vite. Submissions will be evaluated based on web vitals, bundle size optimization, and dynamic design aesthetics.",
+    "tags": [
+      "React",
+      "Next.js",
+      "Vite",
+      "TypeScript",
+      "TailwindCSS"
+    ],
+    "prize_pool": "$50,000 USD",
+    "registration_url": "https://devpost.com/hackathons/nextjs-vite-superbuild",
+    "starts_at": "2026-06-17T19:18:36.610Z",
+    "ends_at": "2026-06-24T19:18:36.610Z",
+    "status": "ongoing",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
   },
   {
-    id: "h3-ai-open-devfest",
-    title: "AI Open DevFest",
-    organizer: "Hugging Face & OpenAI",
-    description: "Create open-source AI applications, agentic tools, or model integrations. Leverage open weights and standard APIs to solve real-world problems in coding, automation, and science.",
-    tags: ["AI", "Python", "FastAPI", "Machine Learning"],
-    prize_pool: "$75,000 USD",
-    registration_url: "https://devpost.com/hackathons/ai-open-devfest",
-    starts_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),  // started 1 day ago
-    ends_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),    // ends in 3 days
-    status: "ongoing",
-    submitted_by: null,
-    created_at: new Date().toISOString()
+    "id": "h3-ai-open-devfest",
+    "title": "AI Open DevFest",
+    "organizer": "Hugging Face & OpenAI",
+    "description": "Create open-source AI applications, agentic tools, or model integrations. Leverage open weights and standard APIs to solve real-world problems in coding, automation, and science.",
+    "tags": [
+      "AI",
+      "Python",
+      "FastAPI",
+      "Machine Learning"
+    ],
+    "prize_pool": "$75,000 USD",
+    "registration_url": "https://devpost.com/hackathons/ai-open-devfest",
+    "starts_at": "2026-06-18T19:18:36.610Z",
+    "ends_at": "2026-06-22T19:18:36.610Z",
+    "status": "ongoing",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
   },
   {
-    id: "h4-cloud-native-hub",
-    title: "K8s & Docker Cloud-Native Hub",
-    organizer: "CNCF (Cloud Native Computing Foundation)",
-    description: "Build innovative plugins, operators, or dashboards for Kubernetes and Docker. The goal is to make local development, cluster management, or logging simpler and more visual.",
-    tags: ["Go", "Docker", "Kubernetes", "PostgreSQL"],
-    prize_pool: "$60,000 USD",
-    registration_url: "https://devfolio.co/hackathons/k8s-docker-cloudnative",
-    starts_at: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(), // 15 days from now
-    ends_at: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),   // 25 days from now
-    status: "upcoming",
-    submitted_by: null,
-    created_at: new Date().toISOString()
+    "id": "h-scraped-10",
+    "title": "Solana Hyperdrive",
+    "organizer": "Solana Foundation",
+    "description": "A global open-source hackathon focused on building high-performance decentralized applications, infrastructure, and tools on Solana.",
+    "tags": [
+      "Rust",
+      "Web3",
+      "Solidity"
+    ],
+    "prize_pool": "$1,000,000 USD",
+    "registration_url": "https://devpost.com/hackathons/solana-hyperdrive",
+    "starts_at": "2026-06-24T19:18:32.719Z",
+    "ends_at": "2026-07-04T19:18:32.719Z",
+    "status": "upcoming",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
   },
   {
-    id: "h5-supabase-postgres",
-    title: "Postgres & Supabase Realtime-athon",
-    organizer: "Supabase Inc.",
-    description: "Create collaborative, real-time web applications using Supabase Database, RLS, and Auth. Leverage PGExtensions and vector search features to build intelligent products.",
-    tags: ["TypeScript", "PostgreSQL", "Supabase", "React"],
-    prize_pool: "$40,000 USD",
-    registration_url: "https://devfolio.co/hackathons/supabase-postgres-realtime",
-    starts_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(), // started 15 days ago
-    ends_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),    // ended 5 days ago
-    status: "completed",
-    submitted_by: null,
-    created_at: new Date().toISOString()
+    "id": "h-scraped-11",
+    "title": "Vercel AI Hackathon",
+    "organizer": "Vercel & Next.js",
+    "description": "Build the next generation of AI-native applications utilizing Vercel AI SDK, Next.js, and open source LLMs.",
+    "tags": [
+      "AI",
+      "Next.js",
+      "React",
+      "TypeScript"
+    ],
+    "prize_pool": "$80,000 USD",
+    "registration_url": "https://devpost.com/hackathons/vercel-ai-hack",
+    "starts_at": "2026-06-18T19:18:32.719Z",
+    "ends_at": "2026-06-23T19:18:32.719Z",
+    "status": "ongoing",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
   },
   {
-    id: "h6-svelte-solid-challenge",
-    title: "SolidJS & Svelte Interface Challenge",
-    organizer: "Vite Conf & Netlify",
-    description: "A hackathon dedicated to creating lightning-fast, reactive client applications using Svelte, SvelteKit, SolidJS, or SolidStart. Visual aesthetics and high frame rates are core criteria.",
-    tags: ["Svelte", "SolidJS", "GraphQL", "TailwindCSS", "Vite"],
-    prize_pool: "$30,000 USD",
-    registration_url: "https://devpost.com/hackathons/solidjs-svelte-challenge",
-    starts_at: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString(), // started 40 days ago
-    ends_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),   // ended 30 days ago
-    status: "completed",
-    submitted_by: null,
-    created_at: new Date().toISOString()
+    "id": "h-scraped-12",
+    "title": "EthIndia 2026",
+    "organizer": "Devfolio Community",
+    "description": "Asia's biggest Ethereum hackathon bringing together hackers, developers, and designers to build open-source Web3 protocols.",
+    "tags": [
+      "Solidity",
+      "Web3",
+      "Rust",
+      "Go"
+    ],
+    "prize_pool": "$150,000 USD",
+    "registration_url": "https://devfolio.co/hackathons/ethindia2026",
+    "starts_at": "2026-07-19T19:18:32.722Z",
+    "ends_at": "2026-07-22T19:18:32.722Z",
+    "status": "upcoming",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
+  },
+  {
+    "id": "h-scraped-13",
+    "title": "Polygon Builders Hack",
+    "organizer": "Polygon Labs",
+    "description": "Deploy scalable dApps on Polygon using zero-knowledge technology and public open source contracts.",
+    "tags": [
+      "Solidity",
+      "Web3",
+      "TypeScript"
+    ],
+    "prize_pool": "$45,000 USD",
+    "registration_url": "https://devfolio.co/hackathons/polygon-builders-hack",
+    "starts_at": "2026-06-16T19:18:32.722Z",
+    "ends_at": "2026-06-21T19:18:32.722Z",
+    "status": "ongoing",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
+  },
+  {
+    "id": "h-scraped-14",
+    "title": "Gitcoin Grants 24 Hack",
+    "organizer": "Gitcoin DAO",
+    "description": "Help build Gitcoin's open source identity tools, sybil resistance, and coordination mechanics using indexers and clean UI layouts.",
+    "tags": [
+      "Go",
+      "React",
+      "GraphQL",
+      "PostgreSQL"
+    ],
+    "prize_pool": "$35,000 USD",
+    "registration_url": "https://gitcoin.co/hackathon/gg24-hack",
+    "starts_at": "2026-06-09T19:18:32.723Z",
+    "ends_at": "2026-06-18T19:18:32.723Z",
+    "status": "completed",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
+  },
+  {
+    "id": "h-scraped-15",
+    "title": "MLH Hack Autumn 2026",
+    "organizer": "Major League Hacking",
+    "description": "An open-source software and tooling build sprint. Create libraries, developer assets, and utilities for the student community.",
+    "tags": [
+      "Python",
+      "Vite",
+      "TypeScript",
+      "FastAPI"
+    ],
+    "prize_pool": "$10,000 USD",
+    "registration_url": "https://mlh.io/hackathons/autumn-2026",
+    "starts_at": "2026-07-01T19:18:32.723Z",
+    "ends_at": "2026-07-03T19:18:32.723Z",
+    "status": "upcoming",
+    "submitted_by": null,
+    "created_at": "2026-06-19T19:18:36.610Z"
   }
 ];
 
