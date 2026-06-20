@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /$
+Allow: /hackathon/
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /submit
+
+# Sitemaps
+Sitemap: https://contribly.firstissue.dev/sitemap.xml

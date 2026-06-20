@@ -6,4 +6,5 @@ export default [
   route("submit", "routes/submit.tsx"),
   route("dashboard", "routes/dashboard.tsx"),
   route("hackathon/:id", "routes/hackathon.$id.tsx"),
+  route("sitemap.xml", "routes/sitemap.xml.ts"),
 ] satisfies RouteConfig;
